@@ -1,7 +1,5 @@
 apply plugin: 'java'
 apply plugin: 'maven'
-apply plugin: 'com.jfrog.artifactory'
-apply plugin: "nebula.ospackage"
 apply plugin: 'idea'
 
 sourceCompatibility = 1.8
@@ -10,7 +8,16 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    jarInclude
+}
+
 dependencies {
+    compile 'org.json:json:20180813'
+    compile 'org.apache.spark:spark-sql_2.11:2.1.0'
+
+    jarInclude 'org.json:json:20180813'
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'commons-io', name: 'commons-io', version: '2.6'
     testCompile 'com.opencsv:opencsv:3.9'
@@ -54,7 +61,9 @@ build {
     dependsOn buildTomita
 }
 
-buildDeb {
+task buildSpark {
+    group 'build'
+    description 'Assembles this project for spark'
     dependsOn build
 }
 
@@ -63,24 +72,4 @@ def absoluteBuildLibPath = projectDir.absolutePath + "/build/lib"
 
 test {
     environment "LD_LIBRARY_PATH", absoluteLibPath + ":" + absoluteBuildLibPath
-}
-
-def installLibPrefix = "/usr/lib"
-def sharedLibInternalPath = "build/lib"
-def providedLibInternalPath = "lib"
-
-ospackage {
-    arch = "amd64"
-    user = "baikal"
-    permissionGroup = "baikal"
-
-    into(installLibPrefix) {
-        from(sharedLibInternalPath)
-        fileMode 0644
-    }
-
-    into(installLibPrefix) {
-        from(providedLibInternalPath)
-        fileMode 0644
-    }
 }
