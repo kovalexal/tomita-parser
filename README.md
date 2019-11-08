@@ -1,3 +1,7 @@
+# tomita-parser on Apache Spark
+
+*Description & how-to-build is under construction...*
+
 [![Travis](https://img.shields.io/travis/yandex/tomita-parser/master.svg?style=plastic)](https://travis-ci.org/yandex/tomita-parser)
 
 How to build?
